@@ -9,6 +9,11 @@ root.title("App Loader")
 
 addedApps = []
 
+if os.path.isfile('save.txt'):
+    with open ('save.txt', 'r') as f:
+        tempApps = f.read()
+        tempApps = tempApps.split(',')
+
 def add():
     # Allow adding of widgets without duplication
     for widget in appFrame.winfo_children():
@@ -16,7 +21,7 @@ def add():
     
     # Allow adding .exe files to frame
     file = filedialog.askopenfilename(initialdir = "/", title = "Select File", 
-        filetypes=(("executables", "*.exe"), ("all files", "*.*")))
+        filetypes = (("executables", "*.exe"), ("all files", "*.*")))
     
     addedApps.append(file)
 
@@ -28,6 +33,10 @@ def add():
 def run():
     for app in addedApps:
         os.startfile(app)
+
+def save():
+    saveFiles = [('All Files', '*.*'), ('Text Document', '*.txt')]
+    saveFile = filedialog.asksaveasfile(filetypes = saveFiles, defaultextension = saveFiles)
 
 # Create Canvas
 screen = tk.Canvas(root, height = 400, width = 700, bg = "#FFB247")
@@ -53,7 +62,7 @@ runFile.pack()
 
 # Button for Saving Configuration
 saveConfiguration = tk.Button(logicFrame, text = "Save Configuration", padx = 17, pady = 6, 
-    fg = "white", bg = "#FFB247", borderwidth = 0)
+    fg = "white", bg = "#FFB247", borderwidth = 0, command = save)
 saveConfiguration.pack(pady = 30)
 
 # Button for Loading Configuration
@@ -67,3 +76,7 @@ exit.pack(pady = 30)
 
 # Run Main Loop
 root.mainloop()
+
+with open('save.txt', 'w') as f:
+    for app in addedApps:
+        f.write(app + ',')
