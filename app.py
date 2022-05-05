@@ -9,11 +9,6 @@ root.title("App Loader")
 
 addedApps = []
 
-if os.path.isfile('save.txt'):
-    with open ('save.txt', 'r') as f:
-        tempApps = f.read()
-        tempApps = tempApps.split(',')
-
 def add():
     # Allow adding of widgets without duplication
     for widget in appFrame.winfo_children():
@@ -23,7 +18,9 @@ def add():
     file = filedialog.askopenfilename(initialdir = "/", title = "Select File", 
         filetypes = (("executables", "*.exe"), ("all files", "*.*")))
     
-    addedApps.append(file)
+    # Ensure that the filepath is not null
+    if file != "":
+        addedApps.append(file)
 
     # Draw added apps
     for app in addedApps:
@@ -34,9 +31,29 @@ def run():
     for app in addedApps:
         os.startfile(app)
 
+def listToString(inputString):
+    str = ""
+
+    for stringMembers in inputString:
+        str += stringMembers + "\n"
+    
+    return str
+
 def save():
-    saveFiles = [('All Files', '*.*'), ('Text Document', '*.txt')]
-    saveFile = filedialog.asksaveasfile(filetypes = saveFiles, defaultextension = saveFiles)
+    # Allow file saving
+    if len(addedApps) != 0:
+        file = filedialog.asksaveasfilename(filetypes = [("txt file", ".txt")], defaultextension = ".txt")
+        writeContent = open(file, 'w')
+        writeContent.write(listToString(addedApps))
+        writeContent.close()
+
+def load():
+    # Allow file loading
+    if len(addedApps) != 0:
+        addedApps.clear()
+    
+    loadFile = filedialog.askopenfilename(initialdir = "/", title = "Load Configration", 
+        filetypes = (("executables", "*.txt"), ("text files", "*.*")))
 
 # Create Canvas
 screen = tk.Canvas(root, height = 400, width = 700, bg = "#FFB247")
@@ -53,7 +70,7 @@ appFrame.place(relwidth = 0.55, relheight = 0.80, rely = 0.1, relx = 0.4)
 # Button for Opening Files
 openFile = tk.Button(logicFrame, text = "Open File", padx = 40, pady = 6, fg = "white", 
     bg = "#FFB247", borderwidth = 0, command = add)
-openFile.pack(pady = 30)
+openFile.pack(pady = 38)
 
 # Button for Running Files
 runFile = tk.Button(logicFrame, text = "Run File(s)", padx = 40, pady = 6, fg = "white", 
@@ -63,20 +80,12 @@ runFile.pack()
 # Button for Saving Configuration
 saveConfiguration = tk.Button(logicFrame, text = "Save Configuration", padx = 17, pady = 6, 
     fg = "white", bg = "#FFB247", borderwidth = 0, command = save)
-saveConfiguration.pack(pady = 30)
+saveConfiguration.pack(pady = 38)
 
 # Button for Loading Configuration
 loadConfiguration = tk.Button(logicFrame, text = "Load Configuration", padx = 17, pady = 6, 
-    fg = "white", bg = "#FFB247", borderwidth = 0)
+    fg = "white", bg = "#FFB247", borderwidth = 0, command = load)
 loadConfiguration.pack()
-
-exit = tk.Button(logicFrame, text = "Exit", padx = 20, pady = 20, 
-    fg = "#3D426B", bg = "white", borderwidth = 0)
-exit.pack(pady = 30)
 
 # Run Main Loop
 root.mainloop()
-
-with open('save.txt', 'w') as f:
-    for app in addedApps:
-        f.write(app + ',')
