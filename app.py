@@ -2,6 +2,8 @@ import tkinter as tk
 from tkinter import filedialog, Text
 import os
 
+from PIL import Image, ImageTk
+
 # Set TKinter Window Properties
 root = tk.Tk()
 root.resizable(width = False, height = False)
