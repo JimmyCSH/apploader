@@ -1,3 +1,9 @@
+# HELPFUL RESOURCES
+#
+# https://www.youtube.com/watch?v=jE-SpRI3K5g
+# https://pythonprogramming.net/tkinter-popup-message-window/
+# https://www.codegrepper.com/code-examples/python/how+to+convert+text+file+to+array+in+python
+
 import tkinter as tk
 from tkinter import filedialog, Text
 import os
