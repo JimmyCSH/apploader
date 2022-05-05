@@ -34,6 +34,7 @@ def run():
 def listToString(inputString):
     str = ""
 
+    # Convert a list to a string
     for stringMembers in inputString:
         str += stringMembers + "\n"
     
@@ -42,8 +43,8 @@ def listToString(inputString):
 def save():
     # Allow file saving
     if len(addedApps) != 0:
-        file = filedialog.asksaveasfilename(filetypes = [("txt file", ".txt")], defaultextension = ".txt")
-        writeContent = open(file, 'w')
+        saveFile = filedialog.asksaveasfilename(filetypes = [("text files", ".txt")], defaultextension = ".txt")
+        writeContent = open(saveFile, 'w')
         writeContent.write(listToString(addedApps))
         writeContent.close()
 
@@ -53,7 +54,22 @@ def load():
         addedApps.clear()
     
     loadFile = filedialog.askopenfilename(initialdir = "/", title = "Load Configration", 
-        filetypes = (("executables", "*.txt"), ("text files", "*.*")))
+        filetypes = (("text files", "*.txt"), ("all files", "*.*")))
+
+    # Read file so long as the directory is not null
+    if loadFile != "":
+        loadedFile = open(loadFile, 'r')
+        lines = loadedFile.readlines()
+
+        for ele in lines:
+            addedApps.append(ele.rstrip())
+        
+        loadedFile.close()
+    
+    # Draw added apps
+    for app in addedApps:
+        label = tk.Label(appFrame, text = app, width = 385)
+        label.pack()
 
 # Create Canvas
 screen = tk.Canvas(root, height = 400, width = 700, bg = "#FFB247")
